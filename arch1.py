@@ -5,3 +5,4 @@ class Saludar(self):
 
 Saludar()
 print("Rama hilos")
+print("Cúpido es un tonto")
