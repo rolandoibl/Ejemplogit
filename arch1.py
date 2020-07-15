@@ -1,8 +1,7 @@
 import sys
 
-class Saludar(self):
-	print("Hola")
+class SaludarNuevo(self):
+	print("Hola a todos")
 
-Saludar()
+SaludarNuevo()
 print("Rama hilos")
-print("Cúpido es un tonto")
