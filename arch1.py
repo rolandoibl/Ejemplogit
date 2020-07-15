@@ -4,4 +4,4 @@ class SaludarNuevo(self):
 	print("Hola a todos")
 
 SaludarNuevo()
-print("Rama hilos")
+print("Rama master")
