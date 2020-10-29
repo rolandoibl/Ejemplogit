@@ -18,7 +18,7 @@ from nav_msgs.msg import Path
 from nav_msgs.srv import *
 from collections import deque
 
-NAME = "IBÁÑEZ_LÓPEZ_ROLANDO_ARTURO"
+NAME = "IBANEZ_LOPEZ_ROLANDO_ARTURO"
 
 def dijkstra(start_r, start_c, goal_r, goal_c, grid_map, cost_map):
     #
@@ -104,7 +104,7 @@ def a_star(start_r, start_c, goal_r, goal_c, grid_map, cost_map):
             if grid_map[nr,nc] > 40 or grid_map[nr,nc] < 0 or in_closed_list[nr,nc]:
                 continue
             g = distances[r,c] + 1 + cost_map[nr, nc]
-            h = numpy.absolute(goal_r - r) + numpy.absolute(goal_c - c) 
+            h = numpy.absolute(goal_r - nr) + numpy.absolute(goal_c - nc) 
             f = g + h
             if g < distances[nr,nc]:
                 distances[nr,nc]    = g
@@ -143,7 +143,7 @@ def get_maps():
         cost_map = clt_cost_map()
         cost_map = cost_map.map
     except:
-        cost_map = inflated_map
+        cost_map = static_map
         print("Cannot get cost map. Using static map instead")
     cost_map = numpy.asarray(cost_map.data)
     cost_map = numpy.reshape(cost_map, (static_map.info.height, static_map.info.width))
