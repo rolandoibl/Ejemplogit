@@ -51,15 +51,19 @@ def calculate_control(robot_x, robot_y, robot_a, goal_x, goal_y):
     error_a = goal_a - robot_a
     
     if error_a > math.pi:
-        error_a = error_a - 2*math.pi
+        error_a -= 2*math.pi
         
     if error_a < math.pi:
-        error_a = error_a + 2*math.pi
+        error_a -= 2*math.pi
     
     v = v_max*math.exp(-error_a*error_a/alpha)
     w = w_max*math.exp(2/(1 + math.exp(-error_a/beta)) - 1)
    
     cmd_vel.linear.x = v
+    cmd_vel.linear.y = 0
+    cmd_vel.linear.z = 0
+    cmd_vel.angular.x = 0
+    cmd_vel.angular.y = 0
     cmd_vel.angular.z = w
     
     return cmd_vel
@@ -89,9 +93,9 @@ def follow_path(path):
     # Send zero speeds (otherwise, robot will keep moving after reaching last point)
     #
     tolerance = 0.1
-    pt = iter(path)
     
-    local_goal = next(pt)
+    local_goal = path[0]
+    i = 0
     global_goal = path[len(path) - 1]
     [r_x, r_y, r_a] = get_robot_pose(listener)
     e_local = math.sqrt(math.pow(r_x - local_goal[0], 2) + math.pow(r_y - local_goal[1], 2))
@@ -101,15 +105,17 @@ def follow_path(path):
         pub_cmd_vel.publish(calculate_control(r_x, r_y, r_a, local_goal[0], local_goal[1]))
         loop.sleep()
         [r_x, r_y, r_a] = get_robot_pose(listener)
-        if e_local < 0.3:
-            try:
-                local_goal = next(pt)
-            except:
-                pass
+        if e_local < 0.1:
+            local_goal = path[i + 1]
+            i += 1
         e_local = math.sqrt(math.pow(r_x - local_goal[0], 2) + math.pow(r_y - local_goal[1], 2))
         e_global = math.sqrt(math.pow(r_x - global_goal[0], 2) + math.pow(r_y - global_goal[1], 2))
     
     cmd_vel.linear.x = 0
+    cmd_vel.linear.y = 0
+    cmd_vel.linear.z = 0
+    cmd_vel.angular.x = 0
+    cmd_vel.angular.y = 0
     cmd_vel.angular.z = 0
     pub_cmd_vel.publish(cmd_vel)
     
