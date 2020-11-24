@@ -42,10 +42,10 @@ def calculate_control(robot_x, robot_y, robot_a, goal_x, goal_y):
     # and return it (check online documentation for the Twist message).
     # Remember to keep error angle in the interval (-pi,pi]
     #
-    alpha = 1
-    beta = 1
-    v_max = 0.2
-    w_max = 0.2
+    alpha = 0.01
+    beta = 0.1
+    v_max = 0.4
+    w_max = 0.4
     
     goal_a = math.atan2(goal_y - robot_y, goal_x - robot_x)
     error_a = goal_a - robot_a
@@ -53,8 +53,8 @@ def calculate_control(robot_x, robot_y, robot_a, goal_x, goal_y):
     if error_a > math.pi:
         error_a -= 2*math.pi
         
-    if error_a < math.pi:
-        error_a -= 2*math.pi
+    if error_a < -math.pi:
+        error_a += 2*math.pi
     
     v = v_max*math.exp(-error_a*error_a/alpha)
     w = w_max*math.exp(2/(1 + math.exp(-error_a/beta)) - 1)
@@ -106,20 +106,19 @@ def follow_path(path):
         loop.sleep()
         [r_x, r_y, r_a] = get_robot_pose(listener)
         e_local = math.sqrt(math.pow(r_x - local_goal[0], 2) + math.pow(r_y - local_goal[1], 2))
-        if e_local < 0.5:
+        if e_local < 0.3:
             i += 1
             local_goal = path[i]
         #e_local = math.sqrt(math.pow(r_x - local_goal[0], 2) + math.pow(r_y - local_goal[1], 2))
         e_global = math.sqrt(math.pow(r_x - global_goal[0], 2) + math.pow(r_y - global_goal[1], 2))
         
-        if i >= len(path)-1:
-            cmd_vel.linear.x = 0
-            cmd_vel.linear.y = 0
-            cmd_vel.linear.z = 0
-            cmd_vel.angular.x = 0
-            cmd_vel.angular.y = 0
-            cmd_vel.angular.z = 0
-            pub_cmd_vel.publish(cmd_vel)
+        cmd_vel.linear.x = 0
+        cmd_vel.linear.y = 0
+        cmd_vel.linear.z = 0
+        cmd_vel.angular.x = 0
+        cmd_vel.angular.y = 0
+        cmd_vel.angular.z = 0
+        pub_cmd_vel.publish(cmd_vel)
     
     return
     
