@@ -109,12 +109,12 @@ std::vector<float> calculate_particle_weights(std::vector<sensor_msgs::LaserScan
         }
         d /= simulated_scans[i].ranges.size();
         weights[i] = expf(-d*d/SENSOR_NOISE);
-        sum += weights[i];
+        //sum += weights[i];
     }
 
-    for(int i = 0; i < weights.size(); i++){
-        weights[i] /= sum;
-    }
+    //for(int i = 0; i < weights.size(); i++){
+    //    weights[i] /= sum;
+    //}
 
     return weights;
 }
@@ -129,7 +129,7 @@ int random_choice(std::vector<float>& weights)
      * Probability of picking an integer 'i' is given by the corresponding weights[i] value.
      * Return the chosen integer.
      */
-    float num = rnd.uniformReal(0, 1);
+    float num = rnd.uniformReal(0, weights.size());
     for(int i = 0; i < weights.size(); i++){
     if(num < weights[i]){
         return i;
