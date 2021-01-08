@@ -109,12 +109,12 @@ std::vector<float> calculate_particle_weights(std::vector<sensor_msgs::LaserScan
         }
         d /= simulated_scans[i].ranges.size();
         weights[i] = expf(-d*d/SENSOR_NOISE);
-        //sum += weights[i];
+        sum += weights[i];
     }
 
-    //for(int i = 0; i < weights.size(); i++){
-    //    weights[i] /= sum;
-    //}
+    for(int i = 0; i < weights.size(); i++){
+        weights[i] /= sum;
+    }
 
     return weights;
 }
